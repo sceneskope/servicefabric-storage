@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+//import "google/protobuf/timestamp.proto";
+//import "google/protobuf/duration.proto";
+//import "google/protobuf/wrappers.proto";
+
+package SceneSkope.ServiceFabric.Storage;
+
+message ReliableListKey {
+	string key = 1;
+	int32 id = 2;
+}
+
+
+message ReliableListMetaData {
+	int32 from = 1;
+	int32 count = 2;
+}

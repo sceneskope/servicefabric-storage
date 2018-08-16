@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ServiceFabric.Data" Version="3.2.162" />
+    <PackageReference Include="SceneSkope.ServiceFabric.ProtocolBuffers" Version="3.2.1-dev-00048" />
+    <PackageReference Include="SceneSkope.ProtocolBuffers.Tools" Version="3.2.1-dev-00048" />
+  </ItemGroup>
+
+</Project>
