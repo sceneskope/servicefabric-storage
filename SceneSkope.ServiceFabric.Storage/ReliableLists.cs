@@ -49,7 +49,32 @@ namespace SceneSkope.ServiceFabric.Storage
             await UpdateMetadataAsync(tx, key, updatedMetadata).ConfigureAwait(false);
         }
 
-        public Task<IAsyncEnumerable<string>> CreateKeyEnumerableAsync(ITransaction tx) => _metadataStore.CreateKeyEnumerableAsync(tx, EnumerationMode.Unordered);
+        public async Task<IAsyncEnumerable<string>> CreateKeyEnumerableAsync(ITransaction tx)
+        {
+            var enumerable = await _metadataStore.CreateKeyEnumerableAsync(tx, EnumerationMode.Unordered).ConfigureAwait(false);
+            var prefixLength = _name.Length + 1;
+            return new MappingAsyncEnumerable<string, string>(enumerable, key => key.Substring(prefixLength));
+        }
+
+        public class ListInformation
+        {
+            public string Key { get; }
+            public int Count { get; }
+
+            public ListInformation(string key, int count)
+            {
+                Key = key;
+                Count = count;
+            }
+        }
+
+        public async Task<IAsyncEnumerable<ListInformation>> CreateInfoEnumerableAsync(ITransaction tx)
+        {
+            var enumerable = await _metadataStore.CreateEnumerableAsync(tx, EnumerationMode.Unordered).ConfigureAwait(false);
+            var prefixLength = _name.Length + 1;
+            return new MappingAsyncEnumerable<KeyValuePair<string, ReliableListMetaData>, ListInformation>(enumerable, kvp =>
+                new ListInformation(kvp.Key.Substring(prefixLength), kvp.Value.Count));
+        }
 
         public async Task<ConditionalValue<TValue>> TryGetAsync(ITransaction tx, string key, int index)
         {
