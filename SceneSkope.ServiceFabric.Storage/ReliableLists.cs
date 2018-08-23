@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.ServiceFabric.Data;
+using Microsoft.ServiceFabric.Data.Collections;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.ServiceFabric.Data;
-using Microsoft.ServiceFabric.Data.Collections;
 
 namespace SceneSkope.ServiceFabric.Storage
 {
@@ -48,6 +48,8 @@ namespace SceneSkope.ServiceFabric.Storage
             var updatedMetadata = new ReliableListMetaData { From = metadata.From, Count = metadata.Count + 1 };
             await UpdateMetadataAsync(tx, key, updatedMetadata).ConfigureAwait(false);
         }
+
+        public Task<IAsyncEnumerable<string>> CreateKeyEnumerableAsync(ITransaction tx) => _metadataStore.CreateKeyEnumerableAsync(tx, EnumerationMode.Unordered);
 
         public async Task<ConditionalValue<TValue>> TryGetAsync(ITransaction tx, string key, int index)
         {
